@@ -545,7 +545,7 @@ For example, the following script will emit the
 [DEP0025 `require('node:sys')`][DEP0025 warning], but not any Experimental
 Warnings (such as
 [ExperimentalWarning: `vm.measureMemory` is an experimental feature][]
-in <=v21) when executed with `node --disable-warning=ExperimentalWarnings`:
+in <=v21) when executed with `node --disable-warning=ExperimentalWarning`:
 
 ```mjs
 import sys from 'node:sys';
@@ -667,7 +667,7 @@ of `--enable-source-maps`.
 <!-- YAML
 added: v20.6.0
 changes:
-  - version: REPLACEME
+  - version: v21.7.0
     pr-url: https://github.com/nodejs/node/pull/51289
     description: Add support to multi-line values.
 -->
@@ -1747,6 +1747,15 @@ Enables report to be generated when the process exits due to an uncaught
 exception. Useful when inspecting the JavaScript stack in conjunction with
 native stack and other runtime environment data.
 
+### `--report-exclude-network`
+
+<!-- YAML
+added: REPLACEME
+-->
+
+Exclude `header.networkInterfaces` from the diagnostic report. By default
+this is not set and the network interfaces are included.
+
 ### `-r`, `--require module`
 
 <!-- YAML
@@ -2551,6 +2560,7 @@ Node.js options that are allowed are:
 * `--redirect-warnings`
 * `--report-compact`
 * `--report-dir`, `--report-directory`
+* `--report-exclude-network`
 * `--report-filename`
 * `--report-on-fatalerror`
 * `--report-on-signal`
@@ -2618,10 +2628,14 @@ V8 options that are allowed are:
 
 <!-- node-options-v8 end -->
 
+<!-- node-options-others start -->
+
 `--perf-basic-prof-only-functions`, `--perf-basic-prof`,
 `--perf-prof-unwinding-info`, and `--perf-prof` are only available on Linux.
 
 `--enable-etw-stack-walking` is only available on Windows.
+
+<!-- node-options-others end -->
 
 ### `NODE_PATH=path[:…]`
 
@@ -2887,6 +2901,23 @@ threadpool by setting the `'UV_THREADPOOL_SIZE'` environment variable to a value
 greater than `4` (its current default value). For more information, see the
 [libuv threadpool documentation][].
 
+### `UV_USE_IO_URING=value`
+
+Enable or disable libuv's use of `io_uring` on supported platforms.
+
+On supported platforms, `io_uring` can significantly improve the performance of
+various asynchronous I/O operations.
+
+`io_uring` is disabled by default due to security concerns. When `io_uring`
+is enabled, applications must not change the user identity of the process at
+runtime. In this case, JavaScript functions such as [`process.setuid()`][] are
+unavailable, and native addons must not invoke system functions such as
+[`setuid(2)`][].
+
+This environment variable is implemented by a dependency of Node.js and may be
+removed in future versions of Node.js. No stability guarantees are provided for
+the behavior of this environment variable.
+
 ## Useful V8 options
 
 V8 has its own set of CLI options. Any V8 CLI option that is provided to `node`
@@ -2897,6 +2928,32 @@ covered by the Node.js stability guarantees. Many of the V8
 options are of interest only to V8 developers. Despite this, there is a small
 set of V8 options that are widely applicable to Node.js, and they are
 documented here:
+
+<!-- v8-options start -->
+
+### `--abort-on-uncaught-exception`
+
+### `--disallow-code-generation-from-strings`
+
+### `--enable-etw-stack-walking`
+
+### `--harmony-shadow-realm`
+
+### `--huge-max-old-generation-size`
+
+### `--jitless`
+
+### `--interpreted-frames-native-stack`
+
+### `--prof`
+
+### `--perf-basic-prof`
+
+### `--perf-basic-prof-only-functions`
+
+### `--perf-prof`
+
+### `--perf-prof-unwinding-info`
 
 ### `--max-old-space-size=SIZE` (in megabytes)
 
@@ -2935,6 +2992,19 @@ for MiB in 16 32 64 128; do
     node --max-semi-space-size=$MiB index.js
 done
 ```
+
+### `--security-revert`
+
+### `--stack-trace-limit=limit`
+
+The maximum number of stack frames to collect in an error's stack trace.
+Setting it to 0 disables stack trace collection. The default value is 10.
+
+```bash
+node --stack-trace-limit=12 -p -e "Error.stackTraceLimit" # prints 12
+```
+
+<!-- v8-options end -->
 
 [#42511]: https://github.com/nodejs/node/issues/42511
 [Chrome DevTools Protocol]: https://chromedevtools.github.io/devtools-protocol/
@@ -2991,6 +3061,8 @@ done
 [`dnsPromises.lookup()`]: dns.md#dnspromiseslookuphostname-options
 [`import` specifier]: esm.md#import-specifiers
 [`process.setUncaughtExceptionCaptureCallback()`]: process.md#processsetuncaughtexceptioncapturecallbackfn
+[`process.setuid()`]: process.md#processsetuidid
+[`setuid(2)`]: https://man7.org/linux/man-pages/man2/setuid.2.html
 [`tls.DEFAULT_MAX_VERSION`]: tls.md#tlsdefault_max_version
 [`tls.DEFAULT_MIN_VERSION`]: tls.md#tlsdefault_min_version
 [`unhandledRejection`]: process.md#event-unhandledrejection

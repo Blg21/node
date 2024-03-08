@@ -2372,7 +2372,7 @@ V8 startup snapshot even though Node.js isn't building one.
 ### `ERR_NOT_IN_SINGLE_EXECUTABLE_APPLICATION`
 
 <!-- YAML
-added: REPLACEME
+added: v21.7.0
 -->
 
 The operation cannot be performed when it's not in a single-executable
@@ -2529,7 +2529,7 @@ and HTTP/2 `Server` instances.
 ### `ERR_SINGLE_EXECUTABLE_APPLICATION_ASSET_NOT_FOUND`
 
 <!-- YAML
-added: REPLACEME
+added: v21.7.0
 -->
 
 A key was passed to single executable application APIs to identify an asset,
@@ -3168,6 +3168,21 @@ Too much HTTP header data was received. In order to protect against malicious or
 malconfigured clients, if more than 8 KiB of HTTP header data is received then
 HTTP parsing will abort without a request or response object being created, and
 an `Error` with this code will be emitted.
+
+<a id="HPE_CHUNK_EXTENSIONS_OVERFLOW"></a>
+
+### `HPE_CHUNK_EXTENSIONS_OVERFLOW`
+
+<!-- YAML
+added:
+ - v21.6.2
+ - v20.11.1
+ - v18.19.1
+-->
+
+Too much data was received for a chunk extensions. In order to protect against
+malicious or malconfigured clients, if more than 16 KiB of data is received
+then an `Error` with this code will be emitted.
 
 <a id="HPE_UNEXPECTED_CONTENT_LENGTH"></a>
 

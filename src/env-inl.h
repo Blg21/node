@@ -430,12 +430,12 @@ inline builtins::BuiltinLoader* Environment::builtin_loader() {
   return &builtin_loader_;
 }
 
-inline const StartExecutionCallback& Environment::embedder_entry_point() const {
-  return embedder_entry_point_;
+inline const EmbedderPreloadCallback& Environment::embedder_preload() const {
+  return embedder_preload_;
 }
 
-inline void Environment::set_embedder_entry_point(StartExecutionCallback&& fn) {
-  embedder_entry_point_ = std::move(fn);
+inline void Environment::set_embedder_preload(EmbedderPreloadCallback fn) {
+  embedder_preload_ = std::move(fn);
 }
 
 inline double Environment::new_async_id() {
